@@ -4,65 +4,79 @@ from views.buku_view import BukuView
 #Muhammad Alfaizan_F5212520036
 
 class BukuController:
-    def __init__(self):
-        # Inisialisasi Model dan View
+    def __init__(self, user_role="anggota"):
+        self.user_role = user_role
         self.model = BukuModel()
         self.view = BukuView()
 
-        self.view.btn_update.configure(command=self.update_buku)
-        self.view.btn_hapus.configure(command=self.hapus_buku)
+        # Menampilkan informasi role pada judul jendela aplikasi
+        self.view.title(f"Sistem Manajemen Perpustakaan - Mode: {self.user_role.upper()}")
 
-        # Binding (mengikat) tombol di View dengan fungsi di Controller
+        # Binding tombol simpan
         self.view.btn_simpan.configure(command=self.simpan_data)
 
-        # Memuat data ke tabel saat aplikasi pertama kali dibuka
+        # OTORISASI: Jika bukan admin, nonaktifkan form input dan tombol simpan
+        if self.user_role != "admin":
+            self.view.btn_simpan.configure(state="disabled", text="Akses Terkunci (Khusus Admin)")
+            self.view.entry_judul.configure(state="disabled")
+            self.view.entry_penulis.configure(state="disabled")
+            self.view.entry_tahun.configure(state="disabled")
+
         self.muat_data_tabel()
 
     def muat_data_tabel(self):
-        # Hapus data lama dari tampilan
         for item in self.view.tabel.get_children():
             self.view.tabel.delete(item)
 
-        # Ambil data terbaru dari database
         data_buku = self.model.get_all_buku()
 
-        # Masukkan kembali data ke tabel
         for buku in data_buku:
             self.view.tabel.insert(
                 "",
                 "end",
-                values=(
-                    buku["id_buku"],
-                    buku["judul"],
-                    buku["penulis"],
-                    buku["tahun_terbit"]
-                )
+                values=(buku['id_buku'], buku['judul'], buku['penulis'], buku['tahun_terbit'])
             )
 
+#Muhammad Alfaizan_F5212520036
     def simpan_data(self):
-        # Mengambil teks dari kotak input di View
+        # Proteksi ganda di level Controller
+        if self.user_role != "admin":
+            messagebox.showerror(
+                "Akses Ditolak",
+                "Anda tidak memiliki izin untuk menambah data!"
+            )
+            return
+
         judul = self.view.entry_judul.get()
         penulis = self.view.entry_penulis.get()
         tahun = self.view.entry_tahun.get()
 
-        # Validasi Form Kosong
         if not judul or not penulis or not tahun:
-            messagebox.showwarning("Peringatan", "Semua kolom form harus diisi!")
+            messagebox.showwarning(
+                "Peringatan",
+                "Semua kolom form harus diisi!"
+            )
             return
 
-        # Mengirim data ke Model untuk disimpan
-        berhasil = self.model.create_buku(judul, penulis, tahun)
+        if self.model.create_buku(judul, penulis, tahun):
+            messagebox.showinfo(
+                "Sukses",
+                "Data buku berhasil disimpan!"
+            )
 
-        if berhasil:
-            messagebox.showinfo("Sukses", "Data buku berhasil disimpan!")
-            # Bersihkan form input
             self.view.entry_judul.delete(0, 'end')
             self.view.entry_penulis.delete(0, 'end')
             self.view.entry_tahun.delete(0, 'end')
-            # Muat ulang tabel agar data terbaru muncul
+
             self.muat_data_tabel()
         else:
-            messagebox.showerror("Error", "Terjadi kesalahan saat menyimpan data.")
+            messagebox.showerror(
+                "Error",
+                "Gagal menyimpan data."
+            )
+
+    def run(self):
+        self.view.mainloop()
 
     def ambil_id_buku(self):
         selected = self.view.tabel.selection()

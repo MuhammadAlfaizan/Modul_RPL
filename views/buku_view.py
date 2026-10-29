@@ -63,31 +63,31 @@ class BukuView(ctk.CTk):
             fill="x"
         )
 
-        # Tombol Update
-        self.btn_update = ctk.CTkButton(
-            self.frame_tombol,
-            text="Update Data",
-            fg_color="blue"
-        )
-        self.btn_update.pack(
-            side="left",
-            padx=(0, 5),
-            fill="x",
-            expand=True
-        )
+        # # Tombol Update
+        # self.btn_update = ctk.CTkButton(
+        #     self.frame_tombol,
+        #     text="Update Data",
+        #     fg_color="blue"
+        # )
+        # self.btn_update.pack(
+        #     side="left",
+        #     padx=(0, 5),
+        #     fill="x",
+        #     expand=True
+        # )
 
-        # Tombol Hapus
-        self.btn_hapus = ctk.CTkButton(
-            self.frame_tombol,
-            text="Hapus Data",
-            fg_color="red"
-        )
-        self.btn_hapus.pack(
-            side="left",
-            padx=(5, 0),
-            fill="x",
-            expand=True
-        )
+        # # Tombol Hapus
+        # self.btn_hapus = ctk.CTkButton(
+        #     self.frame_tombol,
+        #     text="Hapus Data",
+        #     fg_color="red"
+        # )
+        # self.btn_hapus.pack(
+        #     side="left",
+        #     padx=(5, 0),
+        #     fill="x",
+        #     expand=True
+        # )
 
         #Muhammad Alfaizan Rifatullah_F5212520036
         # =====================================
