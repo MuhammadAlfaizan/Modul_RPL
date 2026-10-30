@@ -1,6 +1,7 @@
 #Muhammad Alfaizan Rifatullah_F5212520036
 import customtkinter as ctk
 from tkinter import ttk
+from views.login_view import LoginView
 
 class BukuView(ctk.CTk):
     def __init__(self):
@@ -124,6 +125,21 @@ class BukuView(ctk.CTk):
         self.tabel.column("tahun", width=80, anchor="center")
 
         self.tabel.pack(fill="both", expand=True, padx=15, pady=10)
+
+        # Tombol Logout
+        self.btn_logout = ctk.CTkButton(
+        self.frame_kanan,
+        text="Logout",
+        fg_color="red",
+        command=self.logout
+)
+        self.btn_logout.pack(pady=(0, 10), padx=15, anchor="e")
+
+    def logout(self):
+        self.destroy()  # Menutup jendela BukuView
+
+        login = LoginView()
+        login.mainloop()  # Membuka kembali jendela LoginView
 
 # Blok eksekusi untuk menguji tampilan grafis
 if __name__ == "__main__":
